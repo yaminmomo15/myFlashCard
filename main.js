@@ -220,7 +220,7 @@ function toggleButtons(state) {
       document.getElementById("word").style.display = "none";
       document.getElementById("definition").style.display = "none";
       document.getElementById("message").style.display = "block";  
-      document.getElementById("progress-bar").style.display = "none";    
+      document.getElementById("progress-bar").style.display = "flex";    
   } else if (state == displayCard) {
       document.getElementById("card").style.visibility = "visible";
   } else if (state == hideStudyDeck) {
@@ -289,7 +289,7 @@ function start() {
 }
 
 function nextCard() {
-  
+  db.read();
   if (db.data.length > 0) {
     console.log("here");
       //i = db.data.length - 1; // get the last element of the array
@@ -303,8 +303,7 @@ function nextCard() {
       document.getElementById("definition").innerHTML = db.data[i].definition;
       document.getElementById("word").style.visibility = "visible";
       document.getElementById("definition").style.visibility = "hidden"; 
-      document.getElementById("progress-no").innerText = progressCountDb.data.progress;
-      document.getElementById("deck-size").innerText = progressCountDb.data.deckSize;
+
       toggleButtons(displayCheckAnswer);
       toggleButtons(displayCard);
       toggleButtons(hideStudyDeck);
@@ -313,6 +312,8 @@ function nextCard() {
       //console.log("finished");
       toggleButtons(displayMessage);
   }
+  document.getElementById("progress-no").innerText = progressCountDb.data.progress;
+  document.getElementById("deck-size").innerText = progressCountDb.data.deckSize;
 }
 
 
