@@ -1,0 +1,118 @@
+body {
+  background-color: #F0ECE5;
+
+}
+
+#card {
+  width: 500px;
+  height: 300px;
+  border: solid;
+  text-align: center;
+  /*visibility: hidden;*/
+  border-radius: 25px;
+
+  background-color: #31304D;
+  color:  #F0ECE5;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  
+  
+}
+
+
+
+#message {
+  text-align: center;
+  display: none;
+  color: #F0ECE5;
+}
+
+#check-answer {    
+  display: none;
+}
+
+#grading {
+  display: none;
+}
+
+#study-deck {
+  /*display: block;  */
+}
+
+button {
+  background-color: #161A30;
+  color:  #F0ECE5;
+  border-radius: 5px;
+  width: 100px;
+  height: 35px;
+  border-radius: 10px;
+}
+
+input::file-selector-button {
+  background-color: #B6BBC4;
+  color: #161A30;
+  border-radius: 5px;
+  width: 100px;
+  height: 35px;
+  font-size: 0.95rem;
+  
+}
+
+.item {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+}
+#progress-bar {
+  display: none;
+  flex-direction: row;
+}
+#progress {
+  text-align: left; 
+}
+#reset {
+  margin-left: auto;
+  margin-right: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  background-color: #161A30;
+  color: #F0ECE5;
+  font-size: 1.1rem;  
+}
+#reset:hover {
+  background-color: #B6BBC4;
+  color: #161A30;
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+#go-to-dashboard {
+  width: 200px;
+  height: 50px;
+  font-size: 1.1rem;
+}
+
+button:hover {
+  background-color: #B6BBC4;
+  color: #161A30;
+}
+
+#study {
+  background-color: #B6BBC4;
+  color: #161A30;
+}
+
+#study:hover{
+  background-color: #161A30;
+  color: #F0ECE5;
+}
+
+.progress {
+  display: flex;
+}

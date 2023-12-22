@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flash Cards</title>
+  </head>
+  <body id="main" style="display: none;">
+    
+    <div class="item">
+      <div id="progress-bar">
+        <p id="progress">Progress: <span id="progress-no"></span> / <span id="deck-size"></span> </p>
+        <button id="reset">Reset</button>
+      </div>
+
+      <div id="card" >
+        <div id="study-deck">
+          <p>Click start to study.</p>
+          <button id="study">Start</button>
+          <p>or</p>         
+          <p>Import a csv file to create a new deck.</p>
+          <input type="file" id="file" accept=".csv"/>
+        </div>
+          <h1 id="word" class="hidden">word</h1>
+          <p id="definition" class="hidden">definition</p>
+          <div id="message">
+            <h1>Congratulations!</h1>
+            <h2>You have mastered all the cards.</h2>
+          </div>
+      </div>
+      <div id="check-answer">
+          <button id="answer">Check Answer</button> 
+      </div>          
+      <div id="grading">
+          <button id="hard">Hard</button>
+          <button id="normal">Normal</button>
+          <button id="easy">Easy</button>
+      </div>
+  </div>
+  <script type="module" src="/main.js"></script>
+  </body>
+</html>
