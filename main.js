@@ -60,6 +60,7 @@ let displayMessage = 2;
 let displayCard = 3;
 let hideStudyDeck = 4;
 let displayProgess = 5;
+let displayStart = 6;
 let i = 0; 
 
 const db = new LowSync(new LocalStorage('db'), defaultCards);
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetButton.addEventListener('click', (event) => {
     console.log('reset')
     resetProgress();
+    
   });
 
   answerButton.addEventListener('click', (event) => {
@@ -180,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function checkAnswer() {
   //console.log("check answer");
-  document.getElementById("definition").style.visibility = "visible";
+  document.getElementById("definition").style.display = "block";
   toggleButtons(displayGrading);
 }
 
@@ -226,7 +228,17 @@ function toggleButtons(state) {
   } else if (state == hideStudyDeck) {
       document.getElementById("study-deck").style.display = "none";
   } else if (state == displayProgess) {
-    document.getElementById("progress-bar").style.display = "flex"; 
+      document.getElementById("progress-bar").style.display = "flex"; 
+  } else if (state == displayStart) {
+      document.getElementById("progress-bar").style.display = "none";
+      document.getElementById("message").style.display = "none";
+      document.getElementById("card").style.visibility = "visible";
+      document.getElementById("study-deck").style.display = "block";
+      document.getElementById("word").style.display = "none";
+      document.getElementById("definition").style.definition = "none";
+      document.getElementById("check-answer").style.display = "none";
+      document.getElementById("grading").style.display = "none"; 
+      console.log("displaystart");
   }
 
 }
@@ -280,10 +292,11 @@ function resetProgress() {
   progressCountDb.write();
   document.getElementById("progress-no").innerText = progressCountDb.data.progress;
   document.getElementById("deck-size").innerText = progressCountDb.data.deckSize;
+  toggleButtons(displayStart);
 }
 
 function start() {
-  toggleButtons(displayProgess);
+  toggleButtons(displayProgess); 
   db.read();
   nextCard();
 }
@@ -301,8 +314,8 @@ function nextCard() {
       console.log(db.data[i].word);
       document.getElementById("word").innerHTML = db.data[i].word;
       document.getElementById("definition").innerHTML = db.data[i].definition;
-      document.getElementById("word").style.visibility = "visible";
-      document.getElementById("definition").style.visibility = "hidden"; 
+      document.getElementById("word").style.display = "block";
+      document.getElementById("definition").style.display = "none"; 
 
       toggleButtons(displayCheckAnswer);
       toggleButtons(displayCard);
