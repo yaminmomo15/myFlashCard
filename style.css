@@ -103,16 +103,23 @@ button:hover {
   color: #161A30;
 }
 
-#study {
+#study, #reset-deck {
   background-color: #B6BBC4;
   color: #161A30;
 }
 
-#study:hover{
+#study:hover, #reset-deck:hover {
   background-color: #161A30;
   color: #F0ECE5;
 }
 
 .progress {
   display: flex;
+}
+
+#display-bar {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
 }

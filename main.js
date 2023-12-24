@@ -14,35 +14,21 @@ const csvReader = new csv()
 
 let defaultCards = [
   {
-      "word": "toat",
-      "definition": "kg ma layy",
+      "word": "question1",
+      "definition": "answer1",
       "display": 2
   },
   {
-      "word": "tout tout",
-      "definition": "phoe gyi",
+      "word": "question2",
+      "definition": "answer2",
       "display": 2
   },
   {
-      "word": "pekie",
-      "definition": "toat akg",
+      "word": "question3",
+      "definition": "answer3",
       "display": 2
   },
-  // {
-  //     "word": "kyg mll",
-  //     "definition": "tha ngl chinn",
-  //     "display": 2
-  // },
-  // {
-  //     "word": "nono",
-  //     "definition": "myak hnr cho",
-  //     "display": 2
-  // },
-  // {
-  //     "word": "pekie akg thayy",
-  //     "definition": "lgg gasrr kg",
-  //     "display": 2
-  // }
+
 ]
 
 let defaultCount = {
@@ -50,7 +36,6 @@ let defaultCount = {
   "deckSize": 0
 }
 let completeCards = [];
-
 let levelHard = 3;
 let levelNormal = 2;
 let levelEasy = 1;
@@ -90,8 +75,7 @@ if (completeDb.data == null) {
 }
 
 if (progressCountDb.data == null) {
-  // calculate progress from db
-  
+  // calculate progress from db 
   progressCountDb.data.progress = completeDb.data.length;
   // calculate decksize from db
   progressCountDb.data.deckSize = deckSize;
@@ -110,25 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const normalButton = main.querySelector('#normal');
   const easyButton = main.querySelector('#easy');
   const fileInput = main.querySelector('#file');
+  const resetDeckButton = main.querySelector('#reset-deck');
 
+  displayMainPage();
 
   fileInput.addEventListener('change', (event) => {
-   
-    console.log("csv uploaded")
     let file = fileInput.files.item(0)
     
     const reader = new FileReader();
     reader.readAsText(file)
     reader.addEventListener("load", () => {
-      // console.log(reader.result)
       csvReader.fromString(reader.result)
         .then( (result) => {
-          // console.log(result)
           var newResult = result.map((item) => {
             return {...item, "display": 2};       
           })
 
-          console.log(newResult);
           db.data = newResult;          
           db.write();
 
@@ -144,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
           progressCountDb.data.deckSize = deckSize;
           completeDb.write();
           progressCountDb.write(); 
-          
+          toggleButtons(displayStart);
+          displayMainPage();
         }
 
         )
@@ -156,10 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   resetButton.addEventListener('click', (event) => {
-    console.log('reset')
     resetProgress();
     
   });
+
+  resetDeckButton.addEventListener('click', (event) => {
+    resetProgress();
+  })
 
   answerButton.addEventListener('click', (event) => {
     checkAnswer()
@@ -181,27 +166,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function checkAnswer() {
-  //console.log("check answer");
   document.getElementById("definition").style.display = "block";
   toggleButtons(displayGrading);
 }
 
 function moveToHard() {
-  //console.log("hard");
   setLevel(levelHard, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
 }
 
-function moveToNormal() {
-  //console.log("normal");    
+function moveToNormal() {   
   setLevel(levelNormal, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
 }
 
 function moveToEasy() {
-  //console.log("easy");
   setLevel(levelEasy, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
@@ -238,7 +219,6 @@ function toggleButtons(state) {
       document.getElementById("definition").style.definition = "none";
       document.getElementById("check-answer").style.display = "none";
       document.getElementById("grading").style.display = "none"; 
-      console.log("displaystart");
   }
 
 }
@@ -260,26 +240,19 @@ function setLevel(level, element) {
       }       
   }
   db.write();
-  console.log("db.data:");
-  console.log(db.data);
 }
 
 function moveToComplete(element) {   
-  //console.log("moveToComplete");
   let completed = db.data.splice(element, 1);
   completeDb.data.push(completed[0]);
   completeDb.write();
   progressCountDb.data.progress = completeDb.data.length;
   progressCountDb.write();
-  console.log("completeDb.data:");
-  console.log(completeDb.data);
 }
 
 function resetProgress() {
   // reset deck
   newDb.read();
-  console.log("newdb after read:")
-  console.log(newDb.data);
   db.data = newDb.data;
   db.write();
   // reset completedb
@@ -293,6 +266,7 @@ function resetProgress() {
   document.getElementById("progress-no").innerText = progressCountDb.data.progress;
   document.getElementById("deck-size").innerText = progressCountDb.data.deckSize;
   toggleButtons(displayStart);
+  displayMainPage();
 }
 
 function start() {
@@ -301,17 +275,29 @@ function start() {
   nextCard();
 }
 
+function displayMainPage() {
+  progressCountDb.read();
+  if (progressCountDb.data.progress == 0) {
+    // start
+    document.getElementById("instruction").innerHTML = "Click start to study.";
+    document.getElementById("study").innerHTML = "Start";
+    document.getElementById("reset-deck").style.display = "none";
+  } else if (progressCountDb.data.progress > 0 && progressCountDb.data.progress < progressCountDb.data.deckSize) {
+    // continue
+    document.getElementById("instruction").innerHTML = "Click continue to study.";
+    document.getElementById("study").innerHTML = "Continue";
+    document.getElementById("reset-deck").style.display = "block";
+  }
+};
+
 function nextCard() {
   db.read();
   if (db.data.length > 0) {
-    console.log("here");
       //i = db.data.length - 1; // get the last element of the array
 
       // get random element of the array
       const random = Math.floor(Math.random() * db.data.length);
       i = random;
-      //console.log(`random: ${i}`);
-      console.log(db.data[i].word);
       document.getElementById("word").innerHTML = db.data[i].word;
       document.getElementById("definition").innerHTML = db.data[i].definition;
       document.getElementById("word").style.display = "block";
@@ -322,7 +308,7 @@ function nextCard() {
       toggleButtons(hideStudyDeck);
       
   } else {
-      //console.log("finished");
+      // Finished the whole deck
       toggleButtons(displayMessage);
   }
   document.getElementById("progress-no").innerText = progressCountDb.data.progress;
