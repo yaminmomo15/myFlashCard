@@ -9,19 +9,28 @@ import { LocalStorage } from 'lowdb/browser'
 // https://github.com/Keyang/node-csvtojson
 import { csv } from "csvtojson";
 
-const csvReader = new csv()
+
 // const adapter = new LocalStorage('db')
+var msg = new SpeechSynthesisUtterance();
+msg.rate = 0.8; // From 0.1 to 10
+
 
 let defaultCards = [
   {
-      "word": "question1",
+      "word": "question1",      
       "definition": "answer1",
-      "display": 2
+      "display": 2,
+      "word_language": "en",
+      "definition_language": "en"
+      
   },
   {
       "word": "question2",
+      "word_language": "en",
+      "display": 2,
       "definition": "answer2",
-      "display": 2
+      "definition_language": "en"
+      
   },
   {
       "word": "question3",
@@ -95,42 +104,52 @@ document.addEventListener('DOMContentLoaded', () => {
   const easyButton = main.querySelector('#easy');
   const fileInput = main.querySelector('#file');
   const resetDeckButton = main.querySelector('#reset-deck');
+  
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    const csvReader = new csv();
+    csvReader.fromString(reader.result)
+       .then( (result) => {
+        var newResult = result.map((item) => {
+          var newItem = {...item, "display": 2};  
+          if (!("word_language" in item)) {
+            newItem = {...newItem, "word_language": "en"};
+          }
+          if (!("definition_language" in item)) {
+            newItem = {...newItem, "definition_language": "en"};
+          }              
+          return newItem;  
+        }
+        )
+        db.data = newResult;          
+        db.write();
 
+        // Backup database
+        newDb.data = newResult;
+        newDb.write();
+
+        // Progress bar for new deck
+        deckSize = newResult.length;
+        progress = 0;
+        completeDb.data = [];
+        progressCountDb.data.progress = progress;
+        progressCountDb.data.deckSize = deckSize;
+        completeDb.write();
+        progressCountDb.write(); 
+        toggleButtons(displayStart);
+        displayMainPage();
+      }
+
+      )
+  })
   displayMainPage();
 
   fileInput.addEventListener('change', (event) => {
     let file = fileInput.files.item(0)
     
-    const reader = new FileReader();
+    
     reader.readAsText(file)
-    reader.addEventListener("load", () => {
-      csvReader.fromString(reader.result)
-        .then( (result) => {
-          var newResult = result.map((item) => {
-            return {...item, "display": 2};       
-          })
 
-          db.data = newResult;          
-          db.write();
-
-          // Backup database
-          newDb.data = newResult;
-          newDb.write();
-
-          // Progress bar for new deck
-          deckSize = newResult.length;
-          progress = 0;
-          completeDb.data = [];
-          progressCountDb.data.progress = progress;
-          progressCountDb.data.deckSize = deckSize;
-          completeDb.write();
-          progressCountDb.write(); 
-          toggleButtons(displayStart);
-          displayMainPage();
-        }
-
-        )
-    })
   }, false);
 
   studyButton.addEventListener('click', (event) => {
@@ -168,6 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function checkAnswer() {
   document.getElementById("definition").style.display = "block";
   toggleButtons(displayGrading);
+  msg.lang = db.data[i].definition_language;
+  msg.text = db.data[i].definition;
+  window.speechSynthesis.speak(msg);
 }
 
 function moveToHard() {
@@ -223,7 +245,7 @@ function toggleButtons(state) {
 
 }
 
-function setLevel(level, element) {
+function setLevel(level, element) { 
   if (level == levelHard) {
       db.data[element].display = db.data[element].display + 1;
   }
@@ -270,9 +292,10 @@ function resetProgress() {
 }
 
 function start() {
-  toggleButtons(displayProgess); 
-  db.read();
-  nextCard();
+
+   toggleButtons(displayProgess); 
+   db.read();
+   nextCard();
 }
 
 function displayMainPage() {
@@ -302,7 +325,9 @@ function nextCard() {
       document.getElementById("definition").innerHTML = db.data[i].definition;
       document.getElementById("word").style.display = "block";
       document.getElementById("definition").style.display = "none"; 
-
+      msg.lang = db.data[i].word_language;
+      msg.text = db.data[i].word;
+      window.speechSynthesis.speak(msg);
       toggleButtons(displayCheckAnswer);
       toggleButtons(displayCard);
       toggleButtons(hideStudyDeck);
