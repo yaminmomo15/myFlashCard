@@ -255,12 +255,13 @@ function setLevel(level, element) {
   }
 
   if (level == levelEasy) {
-      db.data[element].display = db.data[element].display - 2;
-      if (db.data[element].display <= 0) {
-          moveToComplete(element);
-          progress = progress + 1;
-      }       
+      db.data[element].display = db.data[element].display - 2;   
   }
+  
+  if (db.data[element].display <= 0) {
+    moveToComplete(element);
+    progress = progress + 1;
+}  
   db.write();
 }
 
