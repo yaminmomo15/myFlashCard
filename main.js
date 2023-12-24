@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = main.querySelector('#file');
   const resetDeckButton = main.querySelector('#reset-deck');
   
+  document.getElementById("grading").style.display = "none";
+
   const reader = new FileReader();
   reader.addEventListener("load", () => {
     const csvReader = new csv();
@@ -217,7 +219,8 @@ function toggleButtons(state) {
       document.getElementById("grading").style.display = "none";
   } else if (state == displayGrading) {
       document.getElementById("check-answer").style.display = "none";
-      document.getElementById("grading").style.display = "block";
+      document.getElementById("grading").style.display = "flex";
+      displayLevel(i);
   } else if (state == displayMessage) {
       document.getElementById("check-answer").style.display = "none";
       document.getElementById("grading").style.display = "none"; 
@@ -245,6 +248,25 @@ function toggleButtons(state) {
 
 }
 
+function displayLevel(element) {
+  var count = db.data[element].display;
+  var hard = count + 1;
+  var normal = count - 1;
+  var easy = count - 2;
+
+  document.getElementById("count-hard").innerHTML = "x " + hard.toString();
+  if ((count - 1) <= 0){
+    document.getElementById("count-normal").innerHTML = "x 0";
+  } else {
+    document.getElementById("count-normal").innerHTML = "x " + normal.toString();
+  }
+  if ((count - 2) <= 0) {
+    document.getElementById("count-easy").innerHTML = "x 0";
+  } else {
+    document.getElementById("count-easy").innerHTML = "x " + easy.toString();
+  } 
+}
+
 function setLevel(level, element) { 
   if (level == levelHard) {
       db.data[element].display = db.data[element].display + 1;
@@ -257,7 +279,7 @@ function setLevel(level, element) {
   if (level == levelEasy) {
       db.data[element].display = db.data[element].display - 2;   
   }
-  
+
   if (db.data[element].display <= 0) {
     moveToComplete(element);
     progress = progress + 1;

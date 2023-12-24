@@ -34,7 +34,10 @@ body {
 }
 
 #grading {
-  display: none;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
 }
 
 #study-deck {
@@ -122,4 +125,10 @@ button:hover {
   flex-direction: row;
   text-align: center;
   justify-content: center;
+}
+
+.count {
+  margin: 0;
+  font-size: 15px;
+  color: #161A30;
 }
