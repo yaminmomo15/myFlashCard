@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetDeckButton = main.querySelector('#reset-deck');
   const wordSoundButton = main.querySelector('#word-sound');
   const defSoundButton = main.querySelector('#def-sound');
+  const playWordButton = main.querySelector('#play-word');
+  const playDefButton = main.querySelector('#play-def');
   
   document.getElementById("grading").style.display = "none";
 
@@ -195,7 +197,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  playWordButton.addEventListener('click', (event) => {
+    if (word_unmute) {
+      msg.lang = db.data[i].word_language;
+      msg.text = db.data[i].word;
+      window.speechSynthesis.speak(msg);
+    }
+  });
 
+  playDefButton.addEventListener('click', (event) => {
+    if (def_unmute) {
+      msg.lang = db.data[i].definition_language;
+      msg.text = db.data[i].definition;
+      window.speechSynthesis.speak(msg);
+    }
+  });
 
   answerButton.addEventListener('click', (event) => {
     checkAnswer()

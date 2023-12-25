@@ -134,7 +134,7 @@ button:hover {
   color: #161A30;
 }
 
-#word-sound, #def-sound {
+#word-sound, #def-sound, #play-word, #play-def {
   color: #B6BBC4;
 
 }
@@ -149,7 +149,17 @@ button:hover {
   bottom: 15px;
   left: 15px;
 }
+#play-word {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+#play-def {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
 
-#word-sound:hover, #def-sound:hover {
+#word-sound:hover, #def-sound:hover, #play-word:hover, #play-def:hover {
   color: whitesmoke;
 }
