@@ -163,3 +163,17 @@ button:hover {
 #word-sound:hover, #def-sound:hover, #play-word:hover, #play-def:hover {
   color: whitesmoke;
 }
+
+@media (max-width: 500px) { 
+  #card {
+    width: 340px;
+    height: 300px;
+  }
+  .item {
+    width: 340px;
+  }
+  p {
+    font-size: 1.4rem;
+  }
+  
+}
