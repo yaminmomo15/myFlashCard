@@ -17,6 +17,7 @@ body {
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
+  position: relative;
   
   
 }
@@ -131,4 +132,24 @@ button:hover {
   margin: 0;
   font-size: 15px;
   color: #161A30;
+}
+
+#word-sound, #def-sound {
+  color: #B6BBC4;
+
+}
+
+#word-sound {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+#def-sound {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+}
+
+#word-sound:hover, #def-sound:hover {
+  color: whitesmoke;
 }

@@ -13,7 +13,8 @@ import { csv } from "csvtojson";
 // const adapter = new LocalStorage('db')
 var msg = new SpeechSynthesisUtterance();
 msg.rate = 0.8; // From 0.1 to 10
-
+let word_unmute = true;
+let def_unmute = true;
 
 let defaultCards = [
   {
@@ -104,8 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const easyButton = main.querySelector('#easy');
   const fileInput = main.querySelector('#file');
   const resetDeckButton = main.querySelector('#reset-deck');
+  const wordSoundButton = main.querySelector('#word-sound');
+  const defSoundButton = main.querySelector('#def-sound');
   
   document.getElementById("grading").style.display = "none";
+
+  
 
   const reader = new FileReader();
   reader.addEventListener("load", () => {
@@ -165,7 +170,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetDeckButton.addEventListener('click', (event) => {
     resetProgress();
-  })
+  });
+
+
+
+  wordSoundButton.addEventListener('click', (event) => {
+    word_unmute = !(word_unmute);
+    console.log("unmute");
+    if (word_unmute) {
+      document.getElementById("word-sound").className = "fa-solid fa-volume-high";
+    } else {
+      document.getElementById("word-sound").className = "fa-solid fa-volume-xmark";
+    }
+
+  });
+
+  defSoundButton.addEventListener('click', (event) => {
+    def_unmute = !(def_unmute);
+    console.log("def unmute");
+    if (def_unmute) {
+      document.getElementById("def-sound").className = "fa-solid fa-volume-high";
+    } else {
+      document.getElementById("def-sound").className = "fa-solid fa-volume-xmark"
+    }
+  });
+
+
 
   answerButton.addEventListener('click', (event) => {
     checkAnswer()
@@ -185,13 +215,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 function checkAnswer() {
   document.getElementById("definition").style.display = "block";
-  toggleButtons(displayGrading);
-  msg.lang = db.data[i].definition_language;
-  msg.text = db.data[i].definition;
-  window.speechSynthesis.speak(msg);
+  toggleButtons(displayGrading); 
+  if (def_unmute) {
+    msg.lang = db.data[i].definition_language;
+    msg.text = db.data[i].definition;
+    window.speechSynthesis.speak(msg);
+  }
+  
 }
 
 function moveToHard() {
@@ -347,10 +379,12 @@ function nextCard() {
       document.getElementById("word").innerHTML = db.data[i].word;
       document.getElementById("definition").innerHTML = db.data[i].definition;
       document.getElementById("word").style.display = "block";
-      document.getElementById("definition").style.display = "none"; 
-      msg.lang = db.data[i].word_language;
-      msg.text = db.data[i].word;
-      window.speechSynthesis.speak(msg);
+      document.getElementById("definition").style.display = "none";  
+      if (word_unmute) {
+        msg.lang = db.data[i].word_language;
+        msg.text = db.data[i].word;
+        window.speechSynthesis.speak(msg);
+      }      
       toggleButtons(displayCheckAnswer);
       toggleButtons(displayCard);
       toggleButtons(hideStudyDeck);
