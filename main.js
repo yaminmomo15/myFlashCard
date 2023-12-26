@@ -9,34 +9,33 @@ import { LocalStorage } from 'lowdb/browser'
 // https://github.com/Keyang/node-csvtojson
 import { csv } from "csvtojson";
 
-
-// const adapter = new LocalStorage('db')
 var msg = new SpeechSynthesisUtterance();
-msg.rate = 0.8; // From 0.1 to 10
+// speech rate varies from 0.1 to 10
+msg.rate = 0.8; 
 let word_unmute = true;
 let def_unmute = true;
 
 let defaultCards = [
   {
-      "word": "question1",      
-      "definition": "answer1",
-      "display": 2,
-      "word_language": "en",
-      "definition_language": "en"
-      
+    "word": "question1",
+    "definition": "answer1",
+    "display": 2,
+    "word_language": "en",
+    "definition_language": "en"
+
   },
   {
-      "word": "question2",
-      "word_language": "en",
-      "display": 2,
-      "definition": "answer2",
-      "definition_language": "en"
-      
+    "word": "question2",
+    "word_language": "en",
+    "display": 2,
+    "definition": "answer2",
+    "definition_language": "en"
+
   },
   {
-      "word": "question3",
-      "definition": "answer3",
-      "display": 2
+    "word": "question3",
+    "definition": "answer3",
+    "display": 2
   },
 
 ]
@@ -45,6 +44,7 @@ let defaultCount = {
   "progress": 0,
   "deckSize": 0
 }
+
 let completeCards = [];
 let levelHard = 3;
 let levelNormal = 2;
@@ -52,11 +52,10 @@ let levelEasy = 1;
 let displayCheckAnswer = 0;
 let displayGrading = 1;
 let displayMessage = 2;
-let displayCard = 3;
-let hideStudyDeck = 4;
-let displayProgess = 5;
-let displayStart = 6;
-let i = 0; 
+let hideStudyDeck = 3;
+let displayProgess = 4;
+let displayStart = 5;
+let i = 0;
 
 const db = new LowSync(new LocalStorage('db'), defaultCards);
 const progressCountDb = new LowSync(new LocalStorage('progressCountDb'), defaultCount);
@@ -109,28 +108,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const defSoundButton = main.querySelector('#def-sound');
   const playWordButton = main.querySelector('#play-word');
   const playDefButton = main.querySelector('#play-def');
-  
-  document.getElementById("grading").style.display = "none";
 
-  
+  //document.getElementById("grading").style.display = "none";
+  toggleButtons(displayStart);
 
   const reader = new FileReader();
   reader.addEventListener("load", () => {
     const csvReader = new csv();
     csvReader.fromString(reader.result)
-       .then( (result) => {
+      .then((result) => {
         var newResult = result.map((item) => {
-          var newItem = {...item, "display": 2};  
+          var newItem = { ...item, "display": 2 };
           if (!("word_language" in item)) {
-            newItem = {...newItem, "word_language": "en"};
+            newItem = { ...newItem, "word_language": "en" };
           }
           if (!("definition_language" in item)) {
-            newItem = {...newItem, "definition_language": "en"};
-          }              
-          return newItem;  
+            newItem = { ...newItem, "definition_language": "en" };
+          }
+          return newItem;
         }
         )
-        db.data = newResult;          
+        db.data = newResult;
         db.write();
 
         // Backup database
@@ -144,21 +142,17 @@ document.addEventListener('DOMContentLoaded', () => {
         progressCountDb.data.progress = progress;
         progressCountDb.data.deckSize = deckSize;
         completeDb.write();
-        progressCountDb.write(); 
+        progressCountDb.write();
         toggleButtons(displayStart);
         displayMainPage();
       }
-
       )
   })
   displayMainPage();
 
   fileInput.addEventListener('change', (event) => {
     let file = fileInput.files.item(0)
-    
-    
     reader.readAsText(file)
-
   }, false);
 
   studyButton.addEventListener('click', (event) => {
@@ -167,29 +161,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetButton.addEventListener('click', (event) => {
     resetProgress();
-    
   });
 
   resetDeckButton.addEventListener('click', (event) => {
     resetProgress();
   });
 
-
-
   wordSoundButton.addEventListener('click', (event) => {
+    // Toggle unmute status
     word_unmute = !(word_unmute);
-    console.log("unmute");
+    // Change icon depending on unmute status
     if (word_unmute) {
       document.getElementById("word-sound").className = "fa-solid fa-volume-high";
     } else {
       document.getElementById("word-sound").className = "fa-solid fa-volume-xmark";
     }
-
   });
 
   defSoundButton.addEventListener('click', (event) => {
+    // Toggle unmute status
     def_unmute = !(def_unmute);
-    console.log("def unmute");
+    // Change icon depending on unmute status
     if (def_unmute) {
       document.getElementById("def-sound").className = "fa-solid fa-volume-high";
     } else {
@@ -218,43 +210,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   hardButton.addEventListener('click', (event) => {
-    moveToHard()
+    setHard()
   });
 
   normalButton.addEventListener('click', (event) => {
-    moveToNormal()
+    setNormal()
   });
 
   easyButton.addEventListener('click', (event) => {
-    moveToEasy()
+    setEasy()
   });
 });
 
-
 function checkAnswer() {
   document.getElementById("definition").style.display = "block";
-  toggleButtons(displayGrading); 
+  toggleButtons(displayGrading);
   if (def_unmute) {
     msg.lang = db.data[i].definition_language;
     msg.text = db.data[i].definition;
     window.speechSynthesis.speak(msg);
   }
-  
 }
 
-function moveToHard() {
+function setHard() {
   setLevel(levelHard, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
 }
 
-function moveToNormal() {   
+function setNormal() {
   setLevel(levelNormal, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
 }
 
-function moveToEasy() {
+function setEasy() {
   setLevel(levelEasy, i);
   toggleButtons(displayCheckAnswer);
   nextCard();
@@ -263,37 +253,32 @@ function moveToEasy() {
 function toggleButtons(state) {
   // reveal definition
   if (state == displayCheckAnswer) {
-      document.getElementById("check-answer").style.display = "block";
-      document.getElementById("grading").style.display = "none";
+    document.getElementById("check-answer").style.display = "block";
+    document.getElementById("grading").style.display = "none";
   } else if (state == displayGrading) {
-      document.getElementById("check-answer").style.display = "none";
-      document.getElementById("grading").style.display = "flex";
-      displayLevel(i);
+    document.getElementById("check-answer").style.display = "none";
+    document.getElementById("grading").style.display = "flex";
+    displayLevel(i);
   } else if (state == displayMessage) {
-      document.getElementById("check-answer").style.display = "none";
-      document.getElementById("grading").style.display = "none"; 
-      //document.getElementById("card").style.visibility = "hidden";
-      document.getElementById("word").style.display = "none";
-      document.getElementById("definition").style.display = "none";
-      document.getElementById("message").style.display = "block";  
-      document.getElementById("progress-bar").style.display = "flex";    
-  } else if (state == displayCard) {
-      document.getElementById("card").style.visibility = "visible";
-  } else if (state == hideStudyDeck) {
-      document.getElementById("study-deck").style.display = "none";
+    document.getElementById("check-answer").style.display = "none";
+    document.getElementById("grading").style.display = "none";
+    document.getElementById("word").style.display = "none";
+    document.getElementById("definition").style.display = "none";
+    document.getElementById("message").style.display = "block";
+    document.getElementById("progress-bar").style.display = "flex";
+  }  else if (state == hideStudyDeck) {
+    document.getElementById("study-deck").style.display = "none";
   } else if (state == displayProgess) {
-      document.getElementById("progress-bar").style.display = "flex"; 
+    document.getElementById("progress-bar").style.display = "flex";
   } else if (state == displayStart) {
-      document.getElementById("progress-bar").style.display = "none";
-      document.getElementById("message").style.display = "none";
-      document.getElementById("card").style.visibility = "visible";
-      document.getElementById("study-deck").style.display = "block";
-      document.getElementById("word").style.display = "none";
-      document.getElementById("definition").style.definition = "none";
-      document.getElementById("check-answer").style.display = "none";
-      document.getElementById("grading").style.display = "none"; 
+    document.getElementById("progress-bar").style.display = "none";
+    document.getElementById("message").style.display = "none";
+    document.getElementById("study-deck").style.display = "block";
+    document.getElementById("word").style.display = "none";
+    document.getElementById("definition").style.definition = "none";
+    document.getElementById("check-answer").style.display = "none";
+    document.getElementById("grading").style.display = "none";
   }
-
 }
 
 function displayLevel(element) {
@@ -301,9 +286,8 @@ function displayLevel(element) {
   var hard = count + 1;
   var normal = count - 1;
   var easy = count - 2;
-
   document.getElementById("count-hard").innerHTML = "x " + hard.toString();
-  if ((count - 1) <= 0){
+  if ((count - 1) <= 0) {
     document.getElementById("count-normal").innerHTML = "x 0";
   } else {
     document.getElementById("count-normal").innerHTML = "x " + normal.toString();
@@ -312,30 +296,27 @@ function displayLevel(element) {
     document.getElementById("count-easy").innerHTML = "x 0";
   } else {
     document.getElementById("count-easy").innerHTML = "x " + easy.toString();
-  } 
+  }
 }
 
-function setLevel(level, element) { 
+function setLevel(level, element) {
   if (level == levelHard) {
-      db.data[element].display = db.data[element].display + 1;
+    db.data[element].display = db.data[element].display + 1;
   }
-
   if (level == levelNormal) {
-      db.data[element].display = db.data[element].display - 1;
+    db.data[element].display = db.data[element].display - 1;
   }
-
   if (level == levelEasy) {
-      db.data[element].display = db.data[element].display - 2;   
+    db.data[element].display = db.data[element].display - 2;
   }
-
   if (db.data[element].display <= 0) {
     moveToComplete(element);
     progress = progress + 1;
-}  
+  }
   db.write();
 }
 
-function moveToComplete(element) {   
+function moveToComplete(element) {
   let completed = db.data.splice(element, 1);
   completeDb.data.push(completed[0]);
   completeDb.write();
@@ -363,10 +344,9 @@ function resetProgress() {
 }
 
 function start() {
-
-   toggleButtons(displayProgess); 
-   db.read();
-   nextCard();
+  toggleButtons(displayProgess);
+  db.read();
+  nextCard();
 }
 
 function displayMainPage() {
@@ -387,27 +367,22 @@ function displayMainPage() {
 function nextCard() {
   db.read();
   if (db.data.length > 0) {
-      //i = db.data.length - 1; // get the last element of the array
-
-      // get random element of the array
-      const random = Math.floor(Math.random() * db.data.length);
-      i = random;
-      document.getElementById("word").innerHTML = db.data[i].word;
-      document.getElementById("definition").innerHTML = db.data[i].definition;
-      document.getElementById("word").style.display = "block";
-      document.getElementById("definition").style.display = "none";  
-      if (word_unmute) {
-        msg.lang = db.data[i].word_language;
-        msg.text = db.data[i].word;
-        window.speechSynthesis.speak(msg);
-      }      
-      toggleButtons(displayCheckAnswer);
-      toggleButtons(displayCard);
-      toggleButtons(hideStudyDeck);
-      
+    const random = Math.floor(Math.random() * db.data.length);
+    i = random;
+    document.getElementById("word").innerHTML = db.data[i].word;
+    document.getElementById("definition").innerHTML = db.data[i].definition;
+    document.getElementById("word").style.display = "block";
+    document.getElementById("definition").style.display = "none";
+    if (word_unmute) {
+      msg.lang = db.data[i].word_language;
+      msg.text = db.data[i].word;
+      window.speechSynthesis.speak(msg);
+    }
+    toggleButtons(displayCheckAnswer);
+    toggleButtons(hideStudyDeck);
   } else {
-      // Finished the whole deck
-      toggleButtons(displayMessage);
+    // Finished the whole deck
+    toggleButtons(displayMessage);
   }
   document.getElementById("progress-no").innerText = progressCountDb.data.progress;
   document.getElementById("deck-size").innerText = progressCountDb.data.deckSize;

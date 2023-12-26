@@ -8,21 +8,15 @@ body {
   height: 300px;
   border: solid;
   text-align: center;
-  /*visibility: hidden;*/
   border-radius: 25px;
-
   background-color: #31304D;
   color:  #F0ECE5;
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
-  position: relative;
-  
-  
+  position: relative;  
 }
-
-
 
 #message {
   text-align: center;
@@ -41,10 +35,6 @@ body {
   justify-content: center;
 }
 
-#study-deck {
-  /*display: block;  */
-}
-
 button {
   background-color: #161A30;
   color:  #F0ECE5;
@@ -60,8 +50,7 @@ input::file-selector-button {
   border-radius: 5px;
   width: 100px;
   height: 35px;
-  font-size: 0.95rem;
-  
+  font-size: 0.95rem;  
 }
 
 .item {
@@ -70,23 +59,26 @@ input::file-selector-button {
   margin-right: auto;
   width: 500px;
 }
+
 #progress-bar {
   display: none;
   flex-direction: row;
 }
+
 #progress {
   text-align: left; 
 }
+
 #reset {
   margin-left: auto;
   margin-right: 0;
   margin-top: auto;
   margin-bottom: auto;
-
   background-color: #161A30;
   color: #F0ECE5;
   font-size: 1.1rem;  
 }
+
 #reset:hover {
   background-color: #B6BBC4;
   color: #161A30;
@@ -136,7 +128,6 @@ button:hover {
 
 #word-sound, #def-sound, #play-word, #play-def {
   color: #B6BBC4;
-
 }
 
 #word-sound {
@@ -144,16 +135,19 @@ button:hover {
   top: 15px;
   left: 15px;
 }
+
 #def-sound {
   position: absolute;
   bottom: 15px;
   left: 15px;
 }
+
 #play-word {
   position: absolute;
   top: 15px;
   right: 15px;
 }
+
 #play-def {
   position: absolute;
   bottom: 15px;
@@ -169,11 +163,12 @@ button:hover {
     width: 340px;
     height: 300px;
   }
+
   .item {
     width: 340px;
   }
+
   p {
     font-size: 1.4rem;
-  }
-  
+  }  
 }
