@@ -11,9 +11,9 @@ import { csv } from "csvtojson";
 
 var msg = new SpeechSynthesisUtterance();
 // speech rate varies from 0.1 to 10
-msg.rate = 0.8; 
-let word_unmute = true;
-let def_unmute = true;
+msg.rate = 0.8;
+let word_unmute = false;
+let def_unmute = false;
 
 let defaultCards = [
   {
@@ -266,7 +266,7 @@ function toggleButtons(state) {
     document.getElementById("definition").style.display = "none";
     document.getElementById("message").style.display = "block";
     document.getElementById("progress-bar").style.display = "flex";
-  }  else if (state == hideStudyDeck) {
+  } else if (state == hideStudyDeck) {
     document.getElementById("study-deck").style.display = "none";
   } else if (state == displayProgess) {
     document.getElementById("progress-bar").style.display = "flex";
@@ -364,11 +364,25 @@ function displayMainPage() {
   }
 };
 
+let previousIndex = [];
+
+function generateRandom(min, max, exclude) {
+  var num = Math.floor(Math.random() * (max - min + 1)) + min; 
+  return exclude.indexOf(num) != -1 ? generateRandom(min, max, exclude) : num; 
+  return (num === 8 || num === 15) ? generateRandom(min, max) : num;
+} 
+
 function nextCard() {
   db.read();
+  let random;
   if (db.data.length > 0) {
-    const random = Math.floor(Math.random() * db.data.length);
+    if(db.data.length != 1) {
+      random = generateRandom(0, db.data.length-1, previousIndex)
+    } else {
+      random = Math.floor(Math.random() * db.data.length);
+    }
     i = random;
+    previousIndex[0] = random;
     document.getElementById("word").innerHTML = db.data[i].word;
     document.getElementById("definition").innerHTML = db.data[i].definition;
     document.getElementById("word").style.display = "block";
