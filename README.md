@@ -1,6 +1,6 @@
 # FlashCard50
-#### Video Demo:  <URL HERE>
-#### [Demo App](https://king-prawn-app-x8zsf.ondigitalocean.app/)
+#### Video Demo: https://youtu.be/GUcKPRQ3zzY
+#### Demo App: https://king-prawn-app-x8zsf.ondigitalocean.app/
 #### Description:
 ### What is it?
 FlashCard50 is a web app that helps user to memorise a list of vabularies with a deck of flash cards. 
