@@ -1,5 +1,5 @@
 # FlashCard50
-#### Video Demo: https://youtu.be/GUcKPRQ3zzY
+#### Video Demo: https://youtu.be/cCjFlrJdljo
 #### Demo App: https://king-prawn-app-x8zsf.ondigitalocean.app/
 #### Description:
 ### What is it?
@@ -29,6 +29,13 @@ Progress will be saved to cookies everywhen user complete a card.
 - HTML
 - CSS
 - Javascript
+
+### How to run:
+```
+npm install
+npm run dev
+```
+
 ### Background Idea 
 I wanted to create a simple flash card program that doesn't come with a steep learning curve of how to use the tool. 
 When user wants to memorize a list of vocabulary, he/she should be able to create a deck quickly without anyhassle of creating a user account or reading a long list of how-to guide. So, I implemented a flash card program that let user import a csv file of a list of vocabulary with a list of word and definition. As soon as the list is imported, user can simply go through the cards and hear the sound of the words. The progress is saved to the browser as cookies so that user can pick up from where he/she left off.
